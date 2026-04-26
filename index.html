@@ -1,158 +1,869 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Olalekan Aleem — UX Research Portfolio</title>
-  <meta name="description" content="Portfolio PDF — view online or download." />
-  <meta name="theme-color" content="#0f1115" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Olalekan — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <!-- Basic, elegant one-pager styles -->
-  <style>
-    :root{
-      --bg:#0f1115;        /* page background */
-      --fg:#e7e9ec;        /* main text */
-      --muted:#a3a8b3;     /* subtle text */
-      --card:#141821;      /* panels */
-      --line:#212635;      /* borders */
-      --brand:#6ee7ff;     /* accent */
-      --brand2:#a78bfa;    /* accent 2 */
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:linear-gradient(180deg, #0b0e13 0%, #0f1115 20%, #101318 100%);
-      color:var(--fg);
-      font:15px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
+<style>
+  /* ─── TOKENS ─────────────────────────────────────────────── */
+  :root {
+    --bg:        #080808;
+    --surface:   #111111;
+    --surface2:  #181818;
+    --border:    rgba(255,255,255,0.07);
+    --text:      #f0ede8;
+    --muted:     rgba(240,237,232,0.45);
+    --accent:    #ffffff;
+    --purple:    #7c5cbf;
+    --purple-glow: rgba(124,92,191,0.25);
 
-    /* Header */
-    .shell{max-width:1100px;margin:0 auto;padding:0 20px}
-    header{
-      position:sticky; top:0; z-index:10;
-      background:rgba(15,17,21,.75);
-      backdrop-filter:saturate(140%) blur(8px);
-      border-bottom:1px solid var(--line);
-    }
-    .bar{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 0}
-    .title{display:flex; flex-direction:column}
-    .title h1{margin:0; font-size:16px; letter-spacing:.2px}
-    .title .sub{margin:0; color:var(--muted); font-size:12px}
+    --r-card:    16px;
+    --r-pill:    999px;
+    --shadow-card: 0 24px 64px rgba(0,0,0,0.7);
+  }
 
-    .actions{display:flex; gap:10px; flex-wrap:wrap}
-    .btn{
-      appearance:none; border:1px solid var(--line); background:var(--card); color:var(--fg);
-      padding:9px 12px; border-radius:12px; text-decoration:none; font-weight:600; font-size:14px;
-      display:inline-flex; align-items:center; gap:8px; transition:.2s transform, .2s background;
-    }
-    .btn:hover{transform:translateY(-1px); background:#1a2030}
-    .btn.brand{border-color:transparent; background:linear-gradient(90deg, var(--brand), var(--brand2)); color:#0b0e13}
-    .btn.small{font-size:13px; padding:7px 10px}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Hero note (mobile tips / fallback) */
-    .note{
-      margin:16px 0 0; color:var(--muted); font-size:13px;
-    }
+  html { scroll-behavior: smooth; }
 
-    /* Viewer panel */
-    main{padding:22px 0 18px}
-    .panel{
-      background:rgba(20,24,33,.85);
-      border:1px solid var(--line);
-      border-radius:16px;
-      overflow:hidden;
-      shadow: 0 10px 24px rgba(0,0,0,.35);
-    }
-    .viewer{
-      width:100%;
-      height:75vh;      /* desktop height */
-      border:0;
-      display:block;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    /* Footer */
-    footer{
-      color:var(--muted);
-      border-top:1px solid var(--line);
-      padding:12px 0 30px;
-      margin-top:16px;
-      font-size:12px;
-      text-align:center;
-    }
+  /* ─── GRAIN OVERLAY ──────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 999;
+  }
 
-    /* Responsive tweaks */
-    @media (max-width: 860px){
-      .viewer{height:82vh}        /* taller on phones */
-      .bar{align-items:flex-start}
-    }
-  </style>
+  /* ─── NAV ─────────────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,8,8,0.6);
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    padding: 10px 24px;
+    border-radius: var(--r-pill);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 48px 80px;
+    gap: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ambient glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-text { animation: fadeUp 0.9s 0.15s ease both; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: var(--r-pill);
+    margin-bottom: 32px;
+  }
+
+  .hero-tag span { width: 6px; height: 6px; border-radius: 50%; background: #5fd88a; display: inline-block; animation: pulse 2s ease infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    color: var(--text);
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(240,237,232,0.35);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 400px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+    padding: 14px 32px;
+    border-radius: var(--r-pill);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+  }
+
+  .btn-ghost:hover { color: var(--text); }
+  .btn-ghost svg { transition: transform 0.2s ease; }
+  .btn-ghost:hover svg { transform: translateX(3px); }
+
+  /* ─── HERO PORTRAIT ─────────────────────────────────────────── */
+  .hero-visual {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    animation: fadeUp 0.9s 0.3s ease both;
+    position: relative;
+  }
+
+  .portrait-wrap {
+    position: relative;
+    width: 440px;
+    height: 520px;
+  }
+
+  .portrait-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+    display: block;
+    filter: contrast(1.05);
+  }
+
+  /* floating stat cards */
+  .stat-card {
+    position: absolute;
+    background: rgba(17,17,17,0.85);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 12px 18px;
+  }
+
+  .stat-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .stat-card .lbl {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .stat-card.s1 { bottom: 48px; left: -48px; animation: floatA 4s ease-in-out infinite; }
+  .stat-card.s2 { top: 48px; right: -32px; animation: floatB 5s ease-in-out infinite; }
+
+  @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* ─── SECTION SHARED ─────────────────────────────────────────── */
+  section { padding: 96px 48px; }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--text);
+    margin-bottom: 48px;
+  }
+
+  /* ─── WORK SECTION ────────────────────────────────────────────── */
+  #work { background: var(--bg); }
+
+  .work-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+
+  .work-header-right {
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 280px;
+    line-height: 1.6;
+    text-align: right;
+  }
+
+  /* ─── PROJECT GRID ────────────────────────────────────────────── */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .project-card {
+    border-radius: var(--r-card);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow 0.35s ease;
+    box-shadow: var(--shadow-card);
+  }
+
+  .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.8);
+  }
+
+  .card-image {
+    width: 100%;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .project-card:hover .card-image img { transform: scale(1.04); }
+
+  .card-body {
+    padding: 20px 24px 24px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  /* card accent bars mirroring Lookfeel palette */
+  .project-card:nth-child(1) .card-image-bg { background: #e8e2d9; }
+  .project-card:nth-child(2) .card-image-bg { background: #1a1a1a; }
+  .project-card:nth-child(3) .card-image-bg { background: #1a1521; }
+
+  .card-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .project-card:hover .card-arrow {
+    background: var(--text);
+    border-color: var(--text);
+  }
+
+  .project-card:hover .card-arrow svg path { stroke: var(--bg); }
+
+  /* ─── ABOUT ───────────────────────────────────────────────────── */
+  #about {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+    align-items: center;
+  }
+
+  .about-copy p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .about-copy p strong { color: var(--text); font-weight: 500; }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  .skill-chip {
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  .about-portrait {
+    position: relative;
+  }
+
+  .about-portrait img {
+    width: 100%;
+    border-radius: 20px;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    filter: contrast(1.05);
+  }
+
+  /* ─── SERVICES ────────────────────────────────────────────────── */
+  #services { background: var(--bg); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--r-card);
+    overflow: hidden;
+    margin-top: 48px;
+  }
+
+  .service-item {
+    background: var(--bg);
+    padding: 40px 32px;
+    transition: background 0.25s ease;
+  }
+
+  .service-item:hover { background: var(--surface); }
+
+  .service-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ─── CTA ─────────────────────────────────────────────────────── */
+  #contact {
+    background: var(--surface);
+    text-align: center;
+    padding: 120px 48px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #contact::before {
+    content: '';
+    position: absolute;
+    bottom: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--purple-glow) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  #contact .section-label { text-align: center; }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+
+  .cta-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 440px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  .cta-actions { display: flex; gap: 16px; justify-content: center; align-items: center; }
+
+  .btn-outline {
+    padding: 14px 32px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-outline:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+
+  /* ─── FOOTER ─────────────────────────────────────────────────── */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer p { font-size: 0.8rem; color: var(--muted); }
+
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ─── ANIMATIONS ──────────────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* stagger children */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:0s; }
+  .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:0.12s; }
+  .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:0.24s; }
+  .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:0.36s; }
+  .reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:0.48s; }
+  .reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:translateY(0); transition-delay:0.6s; }
+
+  /* ─── RESPONSIVE ──────────────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    nav { padding: 20px 32px; }
+    .hero { grid-template-columns: 1fr; padding: 100px 32px 64px; gap: 48px; }
+    .hero-visual { justify-content: flex-start; }
+    .portrait-wrap { width: 100%; max-width: 380px; height: 440px; }
+    .stat-card.s1 { left: 0; }
+    .stat-card.s2 { right: 0; }
+    section { padding: 72px 32px; }
+    .project-grid { grid-template-columns: 1fr 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .services-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 88px 20px 48px; }
+    section { padding: 56px 20px; }
+    .project-grid { grid-template-columns: 1fr; }
+    .work-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .work-header-right { text-align: left; }
+    footer { padding: 24px 20px; }
+    .cta-actions { flex-direction: column; }
+    .portrait-wrap { height: 380px; }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <div class="shell">
-      <div class="bar">
-        <div class="title">
-          <h1>Olalekan Aleem — Portfolio</h1>
-          <p class="sub">Interactive PDF viewer • Fast to load • Easy to share</p>
-        </div>
 
-        <div class="actions">
-          <!-- These links will be filled by JS with the correct file name -->
-          <a id="btnOpen" class="btn brand" href="#" target="_blank" rel="noopener">
-            Open PDF
-          </a>
-          <a id="btnDownload" class="btn" href="#" download>
-            Download
-          </a>
+<!-- ─── NAV ──────────────────────────────────────────── -->
+<nav>
+  <a class="nav-logo" href="#">Olalekan.</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="mailto:hello@olalekan.design">Hire Me</a>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-tag"><span></span> Available for work</div>
+    <h1>Olalekan<br/><em>Portfolio</em></h1>
+    <p class="hero-sub">UX/UI Research Design &amp; Web design. Crafting digital experiences that connect brands with people — from Lagos to the world.</p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">
+        Get in touch
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="portrait-wrap">
+      <img src="HeroLekan.png" alt="Olalekan" />
+
+      <div class="stat-card s1">
+        <div class="num">2+</div>
+        <div class="lbl">Years at Duo Agency</div>
+      </div>
+
+      <div class="stat-card s2">
+        <div class="num">3</div>
+        <div class="lbl">Live Projects</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WORK ──────────────────────────────────────────── -->
+<section id="work">
+  <div class="work-header reveal">
+    <div>
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Projects</h2>
+      <div class="divider"></div>
+    </div>
+    <p class="work-header-right">A curated selection of UX research, UI redesign and web design work across consumer apps and non-profits.</p>
+  </div>
+
+  <div class="project-grid reveal-stagger">
+
+    <!-- Card 1 — POP -->
+    <div class="project-card">
+      <div class="card-image card-image-bg">
+        <img src="pop.jpg" alt="POP App — Usability Evaluation" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">UX Research</span>
+        <div class="card-title">Usability Evaluation</div>
+        <div class="card-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
       </div>
     </div>
-  </header>
 
-  <main class="shell">
-    <div class="panel">
-      <!-- The iframe source is set by JS so filenames with spaces work -->
-      <iframe id="pdfFrame" class="viewer" title="Portfolio PDF"></iframe>
+    <!-- Card 2 — m36 -->
+    <div class="project-card">
+      <div class="card-image card-image-bg">
+        <img src="m36.jpg" alt="m36 — UI/UX Redesign" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">UI/UX Redesign</span>
+        <div class="card-title">Redesigning a Failing App</div>
+        <div class="card-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <p class="note">
-      Tip: If the PDF doesn’t show on some mobile browsers, tap <b>Open PDF</b> to view it in a new tab,
-      or use <b>Download</b>.
-    </p>
-  </main>
+    <!-- Card 3 — Web -->
+    <div class="project-card">
+      <div class="card-image card-image-bg">
+        <img src="web.jpg" alt="Non-profit Web Design" />
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Web Design</span>
+        <div class="card-title">Non-Profit Website</div>
+        <div class="card-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
 
-  <footer>
-    © <span id="y"></span> Olalekan Aleem • Hosted on GitHub Pages
-  </footer>
+  </div>
+</section>
 
-  <script>
-    // === CONFIG: set your exact PDF filename here ===
-    // If you renamed your file to 'portfolio.pdf', leave as is.
-    const pdfFile = 'UXResearch2026.pdf';
-    // If you kept your original name with spaces, e.g.:
-    // const pdfFile = 'Olalekan PDF Portfolio.pdf';
+<!-- ─── ABOUT ──────────────────────────────────────────── -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <p class="section-label">About Me</p>
+      <h2 class="section-title">Designing at the edge of digital &amp; experience</h2>
+      <div class="divider"></div>
+      <p>I'm <strong>Olalekan</strong>, a UI/UX designer at <strong>Duo</strong>, a digital and experiential marketing agency in Lagos. I work across the intersection of product design, 3D visualisation and brand experience.</p>
+      <p>My clients span some of the biggest names on the continent — <strong>Unilever, Red Bull, BetKing, Bet9ja, Maltina, Johnnie Walker</strong> and more. I believe every touchpoint should earn the user's attention.</p>
+      <div class="skills-list">
+        <span class="skill-chip">UX Research</span>
+        <span class="skill-chip">UI Design</span>
+        <span class="skill-chip">Figma</span>
+        <span class="skill-chip">Web Design</span>
+        <span class="skill-chip">3D Visualisation</span>
+        <span class="skill-chip">Brand Activation</span>
+        <span class="skill-chip">Blender</span>
+        <span class="skill-chip">Prototyping</span>
+      </div>
+    </div>
 
-    // Build safe URL (handles spaces and unicode)
-    const safeURL = encodeURI(pdfFile);
+    <div class="about-portrait reveal">
+      <img src="HeroLekan.png" alt="Olalekan portrait" />
+    </div>
+  </div>
+</section>
 
-    // Fill iframe and buttons
-    document.getElementById('pdfFrame').src = safeURL;
-    document.getElementById('btnOpen').href = safeURL;
-    document.getElementById('btnDownload').href = safeURL;
+<!-- ─── SERVICES ────────────────────────────────────────── -->
+<section id="services">
+  <div class="reveal">
+    <p class="section-label">What I Do</p>
+    <h2 class="section-title">Services</h2>
+    <div class="divider"></div>
+  </div>
 
-    // Year
-    document.getElementById('y').textContent = new Date().getFullYear();
+  <div class="services-grid reveal-stagger">
+    <div class="service-item">
+      <span class="service-num">01</span>
+      <div class="service-name">UX Research &amp; Strategy</div>
+      <p class="service-desc">Usability evaluations, user journey mapping, and research-backed design decisions that reduce friction and increase engagement.</p>
+    </div>
+    <div class="service-item">
+      <span class="service-num">02</span>
+      <div class="service-name">UI / Product Design</div>
+      <p class="service-desc">Clean, systematic interfaces built in Figma — from wireframes to pixel-perfect production-ready screens with full component libraries.</p>
+    </div>
+    <div class="service-item">
+      <span class="service-num">03</span>
+      <div class="service-name">Web &amp; Brand Design</div>
+      <p class="service-desc">Responsive websites and digital brand identities for organisations that need to communicate with clarity and authority at scale.</p>
+    </div>
+    <div class="service-item">
+      <span class="service-num">04</span>
+      <div class="service-name">3D &amp; Experiential</div>
+      <p class="service-desc">Event space mockups, 3D product visualisation, and digital-physical activation concepts for brand campaigns that demand attention.</p>
+    </div>
+    <div class="service-item">
+      <span class="service-num">05</span>
+      <div class="service-name">Activation Design</div>
+      <p class="service-desc">Full-stack design for brand activation experiences — from concept through to on-site digital touchpoint design and user flow.</p>
+    </div>
+    <div class="service-item">
+      <span class="service-num">06</span>
+      <div class="service-name">Design Systems</div>
+      <p class="service-desc">Scalable component libraries and design tokens that keep large teams consistent and ship faster across every platform.</p>
+    </div>
+  </div>
+</section>
 
-    // Lightweight fallback: if iframe errors (CSP or blocked), show a message.
-    document.getElementById('pdfFrame').addEventListener('error', () => {
-      const panel = document.querySelector('.panel');
-      panel.innerHTML = `
-        <div style="padding:24px">
-          <p style="margin:0 0 10px; color:#e7e9ec; font-weight:600">We couldn't display the PDF here.</p>
-          <p style="margin:0 0 18px; color:#a3a8b3">Your browser may block inline PDFs. Use the buttons above to open or download it.</p>
-        </div>`;
+<!-- ─── CTA ───────────────────────────────────────────── -->
+<section id="contact">
+  <p class="section-label reveal">Let's work together</p>
+  <h2 class="cta-title reveal">Got a project<br/>in mind?</h2>
+  <p class="cta-sub reveal">Whether it's a product redesign, brand activation, or something entirely new — I'd love to hear about it.</p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" href="mailto:hello@olalekan.design">Send a message</a>
+    <a class="btn-outline" href="https://linkedin.com" target="_blank">LinkedIn</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <p>© 2025 Olalekan. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#">Behance</a>
+    <a href="#">Dribbble</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Twitter</a>
+  </div>
+</footer>
+
+<!-- ─── SCROLL REVEAL JS ──────────────────────────────── -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
     });
-  </script>
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>

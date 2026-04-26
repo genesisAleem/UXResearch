@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M36 — UX Research Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  
+  :root {
+    --bg: #0A0A0A;
+    --surface: #131313;
+    --surface2: #1C1C1C;
+    --border: rgba(255,255,255,0.07);
+    --text: #E8E8E8;
+    --muted: #888880;
+    --accent: #ffe500;
+    --accent2: #4E8FF0;
+    --accent-dim: rgba(200,240,78,0.1);
+    --red: #FF5A5A;
+    
+    --sp4: 4px; --sp8: 8px; --sp12: 12px; --sp16: 16px;
+    --sp24: 24px; --sp32: 32px; --sp48: 48px; --sp64: 64px;
+    --sp96: 96px; --sp128: 128px;
+    
+    --r4: 4px; --r8: 8px; --r12: 12px; --r16: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+  }
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--sp16) var(--sp48);
+    background: rgba(10,10,10,0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-tag {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+  }
+  .nav-pill {
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+    padding: var(--sp4) var(--sp12); border-radius: 20px;
+    background: var(--accent-dim); color: var(--accent);
+    border: 1px solid rgba(200,240,78,0.2); letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* HERO - UPDATED FOR PHOTO */
+  .hero {
+    min-height: 100vh;
+    padding: var(--sp128) var(--sp48) var(--sp96);
+    position: relative; overflow: hidden;
+    /* Use grid to separate text and photo */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp48);
+    align-items: end; /* Aligns content to the bottom of the viewport */
+  }
+  
+  .hero-text-content {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+  }
+
+  .hero-photo-container {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; align-items: center;
+    /* This creates the hand-drawn-style box border */
+    border: 3px solid #fff;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    /* Set a specific aspect ratio or min-height for the photo box */
+    aspect-ratio: 5 / 4; 
+    overflow: hidden; /* Keeps image inside the border */
+  }
+
+  .hero-photo-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* Ensures image fills the box without distortion */
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 70% 30%, rgba(200,240,78,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(78,143,240,0.05) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-kicker {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: var(--sp24);
+    display: flex; align-items: center; gap: var(--sp12);
+  }
+  .hero-kicker::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--accent);
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(32px, 5vw, 64px); /* Slightly smaller clamping for grid layout */
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sp48);
+  }
+  .hero-title em {
+    font-style: normal; color: var(--accent);
+  }
+  
+  /* Update meta items for grid alignment */
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp24);
+    border-top: 1px solid var(--border);
+    padding-top: var(--sp32);
+    width: 100%;
+  }
+  .hero-meta-item label {
+    display: block; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: var(--sp4);
+  }
+  .hero-meta-item span {
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px;
+    color: #fff;
+  }
+
+  /* SECTION */
+  section { padding: var(--sp96) var(--sp48); max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: var(--sp24);
+    display: flex; align-items: center; gap: var(--sp8);
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 20px; height: 1px; background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: clamp(24px, 3.5vw, 42px); letter-spacing: -0.02em;
+    line-height: 1.15; margin-bottom: var(--sp48);
+    max-width: 700px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px; background: var(--border);
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  /* CONTEXT GRID */
+  .context-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp32);
+    margin-bottom: var(--sp64);
+  }
+  .context-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r12); padding: var(--sp32);
+  }
+  .context-card h3 {
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: var(--sp16);
+  }
+  .context-card p {
+    font-size: 15px; line-height: 1.7; color: var(--text);
+  }
+
+  /* HIGHLIGHT TEXT */
+  .highlight-text {
+    font-family: 'Syne', sans-serif; font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 600; line-height: 1.5; letter-spacing: -0.01em;
+    color: var(--text); padding: var(--sp48);
+    background: var(--surface); border-radius: var(--r16);
+    border-left: 3px solid var(--accent);
+    position: relative; margin-bottom: var(--sp64);
+  }
+  .highlight-text::before {
+    content: '"'; position: absolute; top: var(--sp16); left: var(--sp32);
+    font-size: 80px; color: var(--accent); opacity: 0.2;
+    font-family: Georgia, serif; line-height: 1;
+  }
+
+  /* USER TYPES */
+  .user-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp24); margin-bottom: var(--sp64); }
+  .user-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r12); padding: var(--sp24); position: relative;
+    overflow: hidden;
+  }
+  .user-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+  }
+  .user-card.secondary::before { background: var(--accent2); }
+  .user-card.tertiary::before { background: var(--muted); }
+  .user-label {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: var(--sp8);
+  }
+  .user-type-name {
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+    margin-bottom: var(--sp16);
+  }
+  .user-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .user-age {
+    display: inline-block; margin-top: var(--sp16);
+    font-size: 12px; padding: var(--sp4) var(--sp8);
+    background: rgba(200,240,78,0.08); color: var(--accent);
+    border-radius: var(--r4); border: 1px solid rgba(200,240,78,0.15);
+  }
+  .user-card.secondary .user-age {
+    background: rgba(78,143,240,0.08); color: var(--accent2);
+    border-color: rgba(78,143,240,0.15);
+  }
+
+  /* INSIGHT ROWS */
+  .insight-row {
+    display: grid; grid-template-columns: 80px 1fr; gap: var(--sp32);
+    align-items: start; padding: var(--sp32) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .insight-row:last-child { border-bottom: none; }
+  .insight-number {
+    font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    color: var(--accent); line-height: 1; opacity: 0.3;
+  }
+  .insight-title {
+    font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+    margin-bottom: var(--sp8);
+  }
+  .insight-body { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* QUOTE BLOCK */
+  .quote-block {
+    background: var(--surface2); border-radius: var(--r12);
+    padding: var(--sp32); margin: var(--sp32) 0;
+    border: 1px solid var(--border);
+  }
+  .quote-text {
+    font-size: 16px; font-style: italic; line-height: 1.7;
+    color: var(--text); margin-bottom: var(--sp16);
+  }
+  .quote-author {
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* COMPETITOR GRID */
+  .competitor-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp16);
+    margin-bottom: var(--sp64);
+  }
+  .competitor-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r8); padding: var(--sp24); text-align: center;
+  }
+  .competitor-initial {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+    margin: 0 auto var(--sp12);
+  }
+  .competitor-name {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    margin-bottom: var(--sp8);
+  }
+  .competitor-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* PROBLEM STATEMENT */
+  .problem-block {
+    background: linear-gradient(135deg, rgba(255,90,90,0.06) 0%, transparent 60%);
+    border: 1px solid rgba(255,90,90,0.15); border-radius: var(--r16);
+    padding: var(--sp48); margin-bottom: var(--sp64);
+  }
+  .problem-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--red); font-weight: 600; margin-bottom: var(--sp24);
+  }
+  .problem-text {
+    font-family: 'Syne', sans-serif; font-size: clamp(16px, 2vw, 22px);
+    font-weight: 600; line-height: 1.6; max-width: 720px;
+  }
+
+  /* HMW */
+  .hmw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp16); }
+  .hmw-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r8); padding: var(--sp24);
+  }
+  .hmw-card:first-child {
+    grid-column: 1 / -1;
+    background: var(--accent-dim); border-color: rgba(200,240,78,0.2);
+  }
+  .hmw-q {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: var(--sp8); font-weight: 600;
+  }
+  .hmw-card:not(:first-child) .hmw-q { color: var(--muted); }
+  .hmw-text {
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* DESIGN DECISIONS */
+  .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp32); margin-bottom: var(--sp64); }
+  .decision-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r12); padding: var(--sp32);
+  }
+  .decision-icon {
+    width: 40px; height: 40px; border-radius: var(--r8);
+    background: var(--accent-dim); display: flex; align-items: center;
+    justify-content: center; margin-bottom: var(--sp16); font-size: 18px;
+  }
+  .decision-title {
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    margin-bottom: var(--sp8);
+  }
+  .decision-body { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* UX LAWS */
+  .laws-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp16); margin-bottom: var(--sp64); }
+  .law-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r8); padding: var(--sp24); position: relative;
+    overflow: hidden;
+  }
+  .law-bg-num {
+    position: absolute; right: var(--sp12); top: var(--sp8);
+    font-family: 'Syne', sans-serif; font-size: 64px; font-weight: 800;
+    color: var(--accent); opacity: 0.04; line-height: 1;
+  }
+  .law-name {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    margin-bottom: var(--sp8); color: var(--accent);
+  }
+  .law-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* CONCLUSION */
+  .conclusion-block {
+    background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--r16);
+    padding: var(--sp64);
+  }
+  .conclusion-text {
+    font-size: 16px; line-height: 1.8; color: var(--text); max-width: 680px;
+  }
+  .conclusion-rec {
+    display: flex; align-items: flex-start; gap: var(--sp16);
+    padding: var(--sp24); background: var(--surface2); border-radius: var(--r8);
+    margin-top: var(--sp24); border: 1px solid var(--border);
+  }
+  .rec-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    flex-shrink: 0; margin-top: 6px;
+  }
+  .rec-text { font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: var(--sp32) var(--sp48);
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; }
+  .footer-note { font-size: 12px; color: var(--muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-kicker { animation: fadeUp 0.6s ease-out 0.1s both; }
+  .hero-title { animation: fadeUp 0.6s ease-out 0.25s both; }
+  .hero-meta { animation: fadeUp 0.6s ease-out 0.4s both; }
+  .hero-photo-container { animation: fadeUp 0.6s ease-out 0.3s both; }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive update for hero photo */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr; /* Stack vertically on small screens */
+      gap: var(--sp32);
+      padding: 100px var(--sp24) var(--sp64);
+    }
+    .hero-title { font-size: 40px; }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .hero-photo-container { 
+      order: -1; /* Place photo above text on mobile */
+      margin-bottom: var(--sp24);
+      aspect-ratio: 16 / 9; /* Landscape on mobile */
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: var(--sp16) var(--sp24); }
+    section { padding: var(--sp64) var(--sp24); }
+    .context-grid, .decision-grid, .hmw-grid { grid-template-columns: 1fr; }
+    .user-types, .competitor-grid, .laws-grid { grid-template-columns: 1fr 1fr; }
+    .hmw-card:first-child { grid-column: 1; }
+  }
+  /* STRATEGY DOWNLOAD SECTION */
+  .strategy-link-section {
+    padding: var(--sp32) var(--sp48);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-download {
+    display: flex;
+    align-items: center;
+    gap: var(--sp12);
+    padding: var(--sp16) var(--sp32);
+    background: var(--accent);
+    color: #000;
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: var(--r8);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .btn-download:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  /* UPDATED COMPETITOR ICONS */
+  .competitor-brand-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    margin: 0 auto var(--sp16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  .competitor-brand-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px; /* Padding for logo breathing room */
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">m<span>36</span></div>
+  <div class="nav-tag">UX Research Case Study</div>
+  <div class="nav-pill">2024</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  
+  <div class="hero-text-content">
+    <div class="hero-kicker">UX Research · Visual Redesign · Fintech</div>
+    <h1 class="hero-title">Redesigning the<br><em>M36 Product</em></h1>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <label>Product</label>
+        <span>M36 — Digital Investment Platform</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Research Method</label>
+        <span>Usability Testing + Laws of UX</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Role</label>
+        <span>UX Researcher & Designer</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Focus</label>
+        <span>Visual Redesign Process</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-photo-container">
+    <img src="path/to/your/image.jpg" alt="UX Research Visualization of the M36 Redesign" />
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">01 — Context</div>
+  <h2 class="section-title reveal">Why Redesign the M36 Product?</h2>
+  <div class="context-grid">
+    <div class="context-card reveal">
+      <h3>What is M36?</h3>
+      <p>M36 is a digital investment platform that allows users to diversify their financial portfolio by investing in a range of financial products — mutual funds, treasury bills, and high-yield opportunities — primarily accessible as a digital wallet.</p>
+    </div>
+    <div class="context-card reveal">
+      <h3>The Opportunity</h3>
+      <p>We identified several opportunities for our customers — feature improvements, technical enhancements, and UI changes — for both our retail and lifestyle experience. The goal was to address real friction points discovered through user research and observation.</p>
+    </div>
+  </div>
+
+  <div class="highlight-text reveal">
+    A financial digital product like M36 exists to remove the barriers between young Nigerians and wealth-building tools they were never taught to access.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">02 — Users</div>
+  <h2 class="section-title reveal">Who Were the Money Market Adopters?</h2>
+  <div class="user-types">
+    <div class="user-card reveal">
+      <div class="user-label">Primary User</div>
+      <div class="user-type-name">The Young Professional</div>
+      <div class="user-desc">Digitally native Nigerian adults earning a salary who want their money to grow passively. Comfortable with mobile banking but unfamiliar with investment terminology like "yield" or "commercial paper."</div>
+      <div class="user-age">Age 22–35</div>
+    </div>
+    <div class="user-card secondary reveal">
+      <div class="user-label">Secondary User</div>
+      <div class="user-type-name">The Cautious Saver</div>
+      <div class="user-desc">Users with savings mindsets looking for alternatives to traditional fixed deposits. Risk-averse, prefers clarity over complexity — likely to abandon unclear flows.</div>
+      <div class="user-age">Age 30–45</div>
+    </div>
+    <div class="user-card tertiary reveal">
+      <div class="user-label">Edge User</div>
+      <div class="user-type-name">The Active Investor</div>
+      <div class="user-desc">More financially literate users who already use tools like Bamboo or Risevest. Higher expectations for information density and portfolio tracking features.</div>
+      <div class="user-age">Age 25–40</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">03 — Research Insights</div>
+  <h2 class="section-title reveal">Usability Testing + Laws of UX</h2>
+  <p class="reveal" style="color: var(--muted); margin-bottom: var(--sp48); font-size: 15px; max-width: 600px;">
+    To understand decision-making while using M36, I used a combination of user observation and UX design laws to analyse where and why users got stuck.
+  </p>
+
+  <div class="insight-row reveal">
+    <div class="insight-number">01</div>
+    <div>
+      <div class="insight-title">Aesthetic–Usability Effect</div>
+      <div class="insight-body">Users often perceive aesthetically pleasing designs as easier to use. The M36 home page based on usability testing and observation shows that most users like Mrs Tijani don't find the product usable because of its aesthetics and visual design. The design actually does a good job of grouping the wallet together — but falls apart as information is chunked.</div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal">
+    <div class="quote-text">"I really don't know what to do."</div>
+    <div class="quote-author">— Mrs Tijani, Usability Testing Observation</div>
+  </div>
+  <p class="reveal" style="color: var(--muted); font-size: 14px; margin-top: -16px; margin-bottom: var(--sp48);">
+    <em>Observation:</em> Mrs Tijani does not seem to know where to go or what to do. Although familiar with traditional money tools, she doesn't seem to understand the options available. She seemed stressed out and frustrated whenever she encountered a null button, and struggled with the home page UI, investment and fund wallet.
+  </p>
+
+  <div class="insight-row reveal">
+    <div class="insight-number">02</div>
+    <div>
+      <div class="insight-title">Law of Similarity & Chunking</div>
+      <div class="insight-body">Humans often like to find simplicity and order in complex shapes — it prevents us from becoming overwhelmed with information. Colour, shape, size, orientation and association can signal that elements belong to the same group, creating a common visual experience. Grouping similar investment products together using colours or boundaries can help users like Mrs Tijani navigate better.</div>
+    </div>
+  </div>
+
+  <div class="insight-row reveal">
+    <div class="insight-number">03</div>
+    <div>
+      <div class="insight-title">Miller's Law & Information Overload</div>
+      <div class="insight-body">Structure creates a clear path and effectively establishes the relationship between elements and actions. While the design does a good job of grouping the wallet together, the design begins to fall apart as information is chunked — users struggle to navigate the page without clear visual hierarchy to guide them.</div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal">
+    <div class="quote-text">"What are NGN bonds? When does my investment mature? What's my gain?"</div>
+    <div class="quote-author">— Mrs Okueni, Usability Testing Observation</div>
+  </div>
+  <p class="reveal" style="color: var(--muted); font-size: 14px; margin-top: -16px; margin-bottom: var(--sp48);">
+    <em>Observation:</em> Given the nature of the products, yield and investments involved, many investors were deeply skeptical about making decisions. In this case, not understanding the terms like "yield" or "what is a yield?" created a significant confidence barrier.
+  </p>
+</section>
+
+<div class="divider"></div>
+<div class="strategy-link-section reveal">
+  <a href="path/to/your/M36-Strategy-Guide.pdf" class="btn-download" download>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    DOWNLOAD FULL STRATEGY PDF
+  </a>
+</div>
+
+<section>
+  <div class="section-label reveal">04 — Competitive Analysis</div>
+  <h2 class="section-title reveal">How M36 Sits Against the Market</h2>
+  <div class="competitor-grid">
+    <div class="competitor-card reveal">
+      <div class="competitor-brand-wrap">
+        <img src="m36-logo.png" alt="M36">
+      </div>
+      <div class="competitor-name">M36</div>
+      <div class="competitor-desc">Investment wallet — digital financial products. Needs visual clarity improvement.</div>
+    </div>
+    <div class="competitor-card reveal">
+      <div class="competitor-brand-wrap">
+        <img src="risevest-logo.png" alt="Risevest">
+      </div>
+      <div class="competitor-name">Risevest</div>
+      <div class="competitor-desc">Dollar-based investments with strong onboarding and product education.</div>
+    </div>
+    <div class="competitor-card reveal">
+      <div class="competitor-brand-wrap">
+        <img src="bamboo-logo.png" alt="Bamboo">
+      </div>
+      <div class="competitor-name">Bamboo</div>
+      <div class="competitor-desc">US stock trading. Known for transparency in data presentation and flows.</div>
+    </div>
+    <div class="competitor-card reveal">
+      <div class="competitor-brand-wrap">
+        <img src="robinhood-logo.png" alt="Robinhood">
+      </div>
+      <div class="competitor-name">Robinhood</div>
+      <div class="competitor-desc">Benchmark reference — tooltips and progressive disclosure help non-experts.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">05 — Problem Statement</div>
+  <h2 class="section-title reveal">Defining the Core Problem</h2>
+  <div class="problem-block reveal">
+    <div class="problem-label">Problem Statement</div>
+    <div class="problem-text">Young Nigerian investors are not fully engaging with M36's investment offerings because they lack the foundational financial knowledge and face significant UI friction — unclear navigation and confusing terminology create a trust deficit that stops them from making investment decisions.</div>
+  </div>
+
+  <div class="section-label reveal" style="margin-top: var(--sp64);">How Might We?</div>
+  <div class="hmw-grid">
+    <div class="hmw-card reveal">
+      <div class="hmw-q">Primary HMW</div>
+      <div class="hmw-text">How might we simplify the M36 experience so young Nigerian investors who are not familiar with traditional banking can make confident financial decisions?</div>
+    </div>
+    <div class="hmw-card reveal">
+      <div class="hmw-q">How Might We</div>
+      <div class="hmw-text">How might we use visual grouping and colour to help users understand the relationship between investment products?</div>
+    </div>
+    <div class="hmw-card reveal">
+      <div class="hmw-q">How Might We</div>
+      <div class="hmw-text">How might we introduce tooltips and progressive disclosure to demystify terms like "yield," "NGN bonds," and "commercial paper"?</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">06 — Design Decisions</div>
+  <h2 class="section-title reveal">What Changed & Why</h2>
+  <div class="decision-grid">
+    <div class="decision-card reveal">
+      <div class="decision-icon">🎨</div>
+      <div class="decision-title">Colour-Based Grouping</div>
+      <div class="decision-body">Grouping similar investment products together using consistent colour boundaries creates visual chunks that leverage the Law of Similarity. Users no longer need to read every label — they can scan by colour association and build mental models faster.</div>
+    </div>
+    <div class="decision-card reveal">
+      <div class="decision-icon">🗂️</div>
+      <div class="decision-title">Structural Hierarchy</div>
+      <div class="decision-body">Applying Miller's Law — we reduced what's visible on first load to the highest-priority actions and grouped secondary information under expandable sections. This prevents cognitive overload on first encounter with the home page.</div>
+    </div>
+    <div class="decision-card reveal">
+      <div class="decision-icon">💬</div>
+      <div class="decision-title">Contextual Tooltips</div>
+      <div class="decision-body">Inspired by Robinhood's approach, financial terms like "yield", "maturity date", and "commercial papers" now surface in-context tooltips. Users can learn without leaving the product, building confidence incrementally.</div>
+    </div>
+    <div class="decision-card reveal">
+      <div class="decision-icon">📊</div>
+      <div class="decision-title">Progressive Disclosure</div>
+      <div class="decision-body">The BUY PAGE and COMMERCIAL PAPERS screens adopt a staged information model — showing price, gain, and key terms first, with full detail available on demand. Reduces perceived complexity dramatically.</div>
+    </div>
+  </div>
+
+  <div class="section-label reveal" style="margin-top: var(--sp64);">UX Laws Applied</div>
+  <div class="laws-grid" style="margin-top: var(--sp32);">
+    <div class="law-card reveal">
+      <div class="law-bg-num">1</div>
+      <div class="law-name">Aesthetic–Usability Effect</div>
+      <div class="law-body">Users associate visual polish with functional reliability. Improving M36's aesthetics directly increased perceived trustworthiness before any interaction.</div>
+    </div>
+    <div class="law-card reveal">
+      <div class="law-bg-num">2</div>
+      <div class="law-name">Law of Similarity</div>
+      <div class="law-body">Shared colour, shape and size signals group membership. Used to connect related investment products visually without relying on text labels alone.</div>
+    </div>
+    <div class="law-card reveal">
+      <div class="law-bg-num">3</div>
+      <div class="law-name">Miller's Law</div>
+      <div class="law-body">The average person can only keep 7 (±2) items in working memory. Chunking reduces load and enables better decision-making across the home screen.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section>
+  <div class="section-label reveal">07 — Conclusion</div>
+  <h2 class="section-title reveal">Key Takeaways</h2>
+  <div class="conclusion-block">
+    <p class="conclusion-text reveal">In general, the M36 app is missing aesthetic pleasing designs. Applying UX laws and user research findings can greatly improve the perception and usability of the product. As products are diverse in nature, I believe that these products can be grouped using colours, a structural hierarchy — to help users understand what is most important.</p>
+
+    <div class="conclusion-rec reveal">
+      <div class="rec-dot"></div>
+      <div class="rec-text"><strong>Colour grouping</strong> — Use distinct colour territories to map investment categories, reducing cognitive load during product selection.</div>
+    </div>
+    <div class="conclusion-rec reveal">
+      <div class="rec-dot"></div>
+      <div class="rec-text"><strong>Structural hierarchy</strong> — Establish clear visual priority so users can identify the most important action on any screen within 3 seconds.</div>
+    </div>
+    <div class="conclusion-rec reveal">
+      <div class="rec-dot"></div>
+      <div class="rec-text"><strong>Financial literacy integration</strong> — Surface definitions and context inline, reducing drop-off caused by unfamiliar terminology without requiring external education.</div>
+    </div>
+    <div class="conclusion-rec reveal">
+      <div class="rec-dot"></div>
+      <div class="rec-text"><strong>Progressive disclosure</strong> — Present the most essential information first; let users who want depth opt into it — never overwhelm on first contact.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name">Lekan · Portfolio 2024</div>
+  <div class="footer-note">M36 — UX Research & Visual Redesign Case Study</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
